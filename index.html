@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIFE.XYZ</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        .video-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <iframe id="youtube-video" src="https://www.youtube.com/embed/Uca6uuk9l-E?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1" allow="autoplay; fullscreen"></iframe>
+    </div>
+    <script>
+        document.addEventListener('click', function() {
+            var iframe = document.getElementById('youtube-video');
+            var src = iframe.src;
+            if (src.indexOf('mute=1') !== -1) {
+                src = src.replace('mute=1', 'mute=0');
+                iframe.src = src;
+            }
+        });
+    </script>
+</body>
+</html>
