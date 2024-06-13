@@ -29,9 +29,16 @@
 </head>
 <body>
     <div class="video-container">
-        <video id="video" src="video.mp4" autoplay muted playsinline></video>
+        <video id="video" playsinline muted>
+            <source src="video.mp4" type="video/mp4">
+        </video>
     </div>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var video = document.getElementById('video');
+            video.play();
+        });
+
         document.addEventListener('click', function() {
             var video = document.getElementById('video');
             if (video.muted) {
