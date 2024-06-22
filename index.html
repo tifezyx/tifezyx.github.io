@@ -19,16 +19,11 @@
         #video-container {
             width: 100%;
             height: 100%;
-            position: relative;
-            overflow: hidden;
         }
 
         iframe {
             width: 100%;
             height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
             border: none;
         }
     </style>
@@ -38,65 +33,28 @@
         <iframe id="random-video" frameborder="0" allowfullscreen></iframe>
     </div>
     <script>
-        // YouTube IFrame API laden
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        var player;
-        function onYouTubeIframeAPIReady() {
-            fetch('videos.txt')
-                .then(response => response.text())
-                .then(data => {
-                    const videoUrls = data.split('\n').filter(url => url.trim() !== '');
-                    if (videoUrls.length > 0) {
-                        const randomIndex = Math.floor(Math.random() * videoUrls.length);
-                        const randomVideoUrl = videoUrls[randomIndex].trim();
-                        
-                        // Extract video ID from YouTube URL
-                        const videoId = new URL(randomVideoUrl).searchParams.get('v');
-                        if (videoId) {
-                            player = new YT.Player('random-video', {
-                                videoId: videoId,
-                                playerVars: {
-                                    'autoplay': 1,
-                                    'controls': 0,
-                                    'showinfo': 0,
-                                    'modestbranding': 1,
-                                    'loop': 1,
-                                    'fs': 0,
-                                    'cc_load_policy': 0,
-                                    'iv_load_policy': 3,
-                                    'autohide': 1,
-                                    'mute': 1
-                                },
-                                events: {
-                                    'onReady': onPlayerReady,
-                                    'onStateChange': onPlayerStateChange
-                                }
-                            });
-                        } else {
-                            console.error('Invalid YouTube URL:', randomVideoUrl);
-                        }
+        fetch('videos.txt')
+            .then(response => response.text())
+            .then(data => {
+                const videoUrls = data.split('\n').filter(url => url.trim() !== '');
+                if (videoUrls.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * videoUrls.length);
+                    const randomVideoUrl = videoUrls[randomIndex].trim();
+                    const videoId = new URL(randomVideoUrl).searchParams.get('v');
+                    if (videoId) {
+                        const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                        const iframeElement = document.getElementById('random-video');
+                        iframeElement.src = embedUrl;
                     } else {
-                        console.error('No video URLs found in videos.txt');
+                        console.error('falsche youtube url:', randomVideoUrl);
                     }
-                })
-                .catch(error => {
-                    console.error('Error loading videos.txt:', error);
-                });
-        }
-
-        function onPlayerReady(event) {
-            event.target.playVideo();
-        }
-
-        function onPlayerStateChange(event) {
-            if (event.data === YT.PlayerState.ENDED) {
-                event.target.playVideo();
-            }
-        }
+                } else {
+                    console.error('videos.txt leer');
+                }
+            })
+            .catch(error => {
+                console.error('videos.txt error:', error);
+            });
     </script>
 </body>
 </html>
