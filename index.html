@@ -33,50 +33,31 @@
         <iframe id="random-video" frameborder="0" allowfullscreen></iframe>
     </div>
     <script>
-        let videoUrls = [];
-
         // Load video URLs from a text file
-        function loadVideoUrls() {
-            fetch('videos.txt')
-                .then(response => response.text())
-                .then(data => {
-                    videoUrls = data.split('\n').filter(url => url.trim() !== '');
-                    if (videoUrls.length > 0) {
-                        loadRandomVideo();
+        fetch('videos.txt')
+            .then(response => response.text())
+            .then(data => {
+                const videoUrls = data.split('\n').filter(url => url.trim() !== '');
+                if (videoUrls.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * videoUrls.length);
+                    const randomVideoUrl = videoUrls[randomIndex].trim();
+                    
+                    // Extract video ID from YouTube URL
+                    const videoId = new URL(randomVideoUrl).searchParams.get('v');
+                    if (videoId) {
+                        const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                        const iframeElement = document.getElementById('random-video');
+                        iframeElement.src = embedUrl;
                     } else {
-                        console.error('No video URLs found in videos.txt');
+                        console.error('Invalid YouTube URL:', randomVideoUrl);
                     }
-                })
-                .catch(error => {
-                    console.error('Error loading videos.txt:', error);
-                });
-        }
-
-        // Load a random video from the list
-        function loadRandomVideo() {
-            const randomIndex = Math.floor(Math.random() * videoUrls.length);
-            const randomVideoUrl = videoUrls[randomIndex].trim();
-            
-            // Extract video ID from YouTube URL
-            const videoId = new URL(randomVideoUrl).searchParams.get('v');
-            if (videoId) {
-                const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&showinfo=0&modestbranding=1&loop=1&mute=1`;
-                const iframeElement = document.getElementById('random-video');
-                iframeElement.src = embedUrl;
-            } else {
-                console.error('Invalid YouTube URL:', randomVideoUrl);
-            }
-        }
-
-        // Event listener for keypress
-        document.addEventListener('keydown', function(event) {
-            if (event.key.toLowerCase() === 'x') {
-                loadRandomVideo();
-            }
-        });
-
-        // Initialize video loading
-        loadVideoUrls();
+                } else {
+                    console.error('No video URLs found in videos.txt');
+                }
+            })
+            .catch(error => {
+                console.error('Error loading videos.txt:', error);
+            });
     </script>
 </body>
 </html>
