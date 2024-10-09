@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIFE</title>
+    <style>
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'PurpleMagic', sans-serif;
+            color: white;
+            user-select: none;
+        }
+
+        .background-video {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+        }
+
+        .centered-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            width: 50%;
+            height: auto;
+        }
+
+        .disclaimer {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 2;
+            font-size: 14px;
+            padding: 5px;
+            border-radius: 5px;
+            font-family: 'Oswald', sans-serif;
+            user-select: none;
+        }
+
+        .contact-info {
+            position: absolute;
+            top: 70%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            font-size: 20px;
+            font-family: 'Bebas Neue', sans-serif;
+            user-select: none;
+            text-align: center;
+        }
+
+        .contact-info a {
+            color: #ff69b4;
+            text-decoration: none;
+        }
+
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .centered-image {
+                width: 80%;
+            }
+
+            .contact-info {
+                font-size: 24px;
+                display: block;
+                text-align: center;
+            }
+
+            .contact-info a {
+                display: block;
+                margin-top: 5px;
+            }
+
+            .disclaimer {
+                font-size: 12px;
+            }
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue:wght@700&display=swap" rel="stylesheet">
+    <script>
+        let currentAudio = null;
+        let isPlaying = false;
+        const songs = ["resources/fakecrime.mp3", "resources/geldistreich.mp3", "resources/Verbatim.mp3", "resources/tbilw preview.wav"];
+        let lastPlayedIndex = -1;
+
+        function playRandomSong() {
+            if (currentAudio && !currentAudio.paused) {
+                return;
+            }
+            let randomIndex;
+            do {
+                randomIndex = Math.floor(Math.random() * songs.length);
+            } while (randomIndex === lastPlayedIndex);
+            lastPlayedIndex = randomIndex;
+            const newAudio = new Audio(songs[randomIndex]);
+            newAudio.play();
+
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+            currentAudio = newAudio;
+            isPlaying = true;
+
+            const disclaimer = document.getElementById('disclaimer');
+            const songFileName = songs[randomIndex].split('/').pop();
+            disclaimer.textContent = `playing: ${songFileName}.`;
+
+            currentAudio.addEventListener('ended', playRandomSong);
+        }
+
+        document.addEventListener('click', playRandomSong);
+    </script>
+</head>
+<body>
+    <video autoplay muted loop class="background-video">
+        <source src="resources/bgvid.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <img src="resources/tife.png" alt="Centered Image" class="centered-image">
+    <div id="disclaimer" class="disclaimer">click to unmute</div>
+
+    <audio>
+        <source src="media/audio.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div class="contact-info">
+        <span class="desktop">contact // <a href="https://ig.me/m/joonaas.2008" target="_blank">instagram</a> // <a href="mailto:jk@klassen.one">mail</a></span>
+        <span class="mobile">
+            <strong>contact</strong><br>
+            <a href="https://ig.me/m/joonaas.2008" target="_blank">instagram</a><a href="mailto:jk@klassen.one">mail</a>
+        </span>
+    </div>
+
+    <style>
+        @media (max-width: 768px) {
+            .contact-info .desktop {
+                display: none;
+            }
+            .contact-info .mobile {
+                display: block;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .contact-info .desktop {
+                display: block;
+            }
+            .contact-info .mobile {
+                display: none;
+            }
+        }
+    </style>
+</body>
+</html>
